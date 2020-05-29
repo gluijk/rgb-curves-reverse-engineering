@@ -1,19 +1,19 @@
-# IngenierÌa inversa de curvas RGB con R
-# www.datosimagensonido.com
+# Ingenier√≠a inversa de curvas RGB con R
+# www.overfitting.net
 
 library(tiff)
 
 
-# C¡LCULO DE CURVAS RGB
+# C√ÅLCULO DE CURVAS RGB
 
-# Leemos im·genes antes/despuÈs
+# Leemos im√°genes antes/despu√©s
 antes=readTIFF("mazinger1.tif", native=F, convert=F)
 despues=readTIFF("mazinger2.tif", native=F, convert=F)
 
 curva=array(0,c(256,3))
 
-# VersiÛn con bucles recorriendo la imagen
-curvanum=array(0,c(256,3)) # N˙mero de pÌxeles que han contribuido al c·lculo
+# Versi√≥n con bucles recorriendo la imagen
+curvanum=array(0,c(256,3)) # N√∫mero de p√≠xeles que han contribuido al c√°lculo
 for (x in 1:ncol(antes)) {
   for (y in 1:nrow(antes)) {
     for (canal in 1:3) {
@@ -25,13 +25,13 @@ for (x in 1:ncol(antes)) {
   }
 curva=round(curva/curvanum*255)  # Promediamos y normalizamos a rango entero 0..255
 
-# VersiÛn vectorizada
+# Versi√≥n vectorizada
 antesint=round(antes*255)+1  # Rango entero 1..256
 for (canal in 1:3) {
   for (inputx in 1:256) {
     indices=which(antesint[,,canal]==inputx)
     curva[inputx,canal]=mean(despues[,,canal][indices])  # Sintaxis matricial
-    # Donde falte dato en la curva (which(is.nan(curva[]))) habr· un NaN que plot ignorar·
+    # Donde falte dato en la curva (which(is.nan(curva[]))) habr√° un NaN que plot ignorar√°
   }
 }
 curva=round(curva*255)  # Normalizamos a rango entero 0..255
@@ -52,14 +52,14 @@ abline(h=255*c(0,1/4,1/2,3/4,1), v=255*c(0,1/4,1/2,3/4,1), col='black', lty='dot
 procesado=readTIFF("giulietta.tif", native=F, convert=F)
 procesado=round(procesado*255)+1  # Rango entero 1..256
 
-# VersiÛn con bucles recorriendo la imagen
+# Versi√≥n con bucles recorriendo la imagen
 for (x in 1:ncol(procesado)) {
   for (y in 1:nrow(procesado)) {
     for (canal in 1:3) procesado[y,x,canal]=curva[procesado[y,x,canal],canal]
   }
 }
 
-# VersiÛn vectorizada (genial R!)
+# Versi√≥n vectorizada (genial R!)
 for (canal in 1:3) procesado[,,canal]=curva[,canal][procesado[,,canal]]
 
 writeTIFF(procesado/255, "procesado.tif", bits.per.sample=16, compression="LZW")
