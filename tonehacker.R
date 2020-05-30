@@ -1,5 +1,6 @@
 # Ingeniería inversa de curvas RGB con R
 # www.overfitting.net
+# https://www.overfitting.net/2017/09/ingenieria-inversa-de-curvas-rgb-con-r.html
 
 library(tiff)
 
